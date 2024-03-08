@@ -10,7 +10,7 @@ inputs:
     required: true
     default: 'example.org'
   timeout:
-    description: 'Amount of milliseconds after which a XMPP action (typically an IQ request) is considered timed out.'
+    description: 'Amount of milliseconds after which an XMPP action (typically an IQ request) is considered timed out.'
     required: false
     default: '60000'
   adminAccountUsername:
@@ -20,7 +20,7 @@ inputs:
     description: 'Password for the admin account.'
     required: false
   disabledTests:
-    description: 'Comma-separated list of of tests that are to be skipped (eg: "EntityCapsTest,SoftwareInfoIntegrationTest")'
+    description: 'Comma-separated list of tests that are to be skipped (eg: "EntityCapsTest,SoftwareInfoIntegrationTest")'
     required: false
 
 runs:
