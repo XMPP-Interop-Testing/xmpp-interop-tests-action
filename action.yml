@@ -22,7 +22,7 @@ inputs:
   disabledTests:
     description: 'Comma-separated list of of tests that are to be skipped (eg: "EntityCapsTest,SoftwareInfoIntegrationTest")'
     required: false
-  
+
 runs:
   using: "composite"
   steps:
@@ -31,22 +31,15 @@ runs:
         java-version: 11
         distribution: zulu
 
-    - uses: gradle/gradle-build-action@v2
+    - uses: dsaltares/fetch-gh-release-asset@1.1.1
       with:
-        gradle-version: 6.3
+        repo: 'XMPP-Interop-Testing/smack-sint-server-extensions'
+        version: 'tags/v1.0'
+        file: 'smack-sint-server-extensions-1.0-jar-with-dependencies.jar'
 
     - run: |
         sudo echo "${{ inputs.ipAddress }} ${{ inputs.domain }}" | sudo tee -a /etc/hosts
-        gradle --console=plain \
-               --build-file ${{ github.action_path }}/test.gradle \
-               -PsmackVersion="4.4.7" \
-               -q dependencies
-        gradle \
-          --console=plain \
-          --stacktrace \
-          run \
-          -b ${{ github.action_path }}/test.gradle \
-          -PsmackVersion="4.4.7" \
+        java \
           -Dsinttest.service="${{ inputs.domain }}" \
           -Dsinttest.securityMode=disabled \
           -Dsinttest.replyTimeout=${{ inputs.timeout }} \
@@ -54,5 +47,6 @@ runs:
           -Dsinttest.adminAccountPassword="${{ inputs.adminAccountPassword }}" \
           -Dsinttest.enabledConnections=tcp \
           -Dsinttest.dnsResolver=javax \
-          -Dsinttest.disabledTests="-Dsinttest.disabledTests=${{ inputs.disabledTests }}"
+          -Dsinttest.disabledTests="-Dsinttest.disabledTests=${{ inputs.disabledTests }}" \
+          -jar smack-sint-server-extensions-1.0-jar-with-dependencies.jar
       shell: bash
