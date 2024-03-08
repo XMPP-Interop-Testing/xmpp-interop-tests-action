@@ -22,7 +22,7 @@ inputs:
   disabledTests:
     description: 'Comma-separated list of of tests that are to be skipped (eg: "EntityCapsTest,SoftwareInfoIntegrationTest")'
     required: false
-
+  
 runs:
   using: "composite"
   steps:
@@ -46,7 +46,7 @@ runs:
           --stacktrace \
           run \
           -b ${{ github.action_path }}/test.gradle \
-          -PsmackVersion="${{ inputs.smackVersion }}" \
+          -PsmackVersion="4.4.7" \
           -Dsinttest.service="${{ inputs.domain }}" \
           -Dsinttest.securityMode=disabled \
           -Dsinttest.replyTimeout=${{ inputs.timeout }} \
