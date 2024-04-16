@@ -25,6 +25,10 @@ inputs:
   disabledTests:
     description: 'Comma-separated list of tests that are to be skipped (eg: "EntityCapsTest,SoftwareInfoIntegrationTest")'
     required: false
+  logDir:
+    description: 'The directory in which the test output and logs are to be stored. This directory will be created, if it does not already exist.'
+    required: false
+    default: './output'
 
 runs:
   using: "composite"
@@ -52,5 +56,7 @@ runs:
           -Dsinttest.dnsResolver=javax \
           -Dsinttest.disabledSpecifications="${{ inputs.disabledSpecifications }}" \
           -Dsinttest.disabledTests="${{ inputs.disabledTests }}" \
+          -Dsinttest.debugger="org.igniterealtime.smack.inttest.util.FileLoggerFactory" \
+          -DlogDir="${{ inputs.logDir }}" \
           -jar smack-sint-server-extensions-1.1-jar-with-dependencies.jar
       shell: bash
