@@ -19,6 +19,9 @@ inputs:
   adminAccountPassword:
     description: 'Password for the admin account.'
     required: false
+  disabledSpecifications:
+    description: 'Comma-separated list of specifications for which tests are to be skipped (eg: "XEP-0045,XEP-0060")'
+    required: false
   disabledTests:
     description: 'Comma-separated list of tests that are to be skipped (eg: "EntityCapsTest,SoftwareInfoIntegrationTest")'
     required: false
@@ -34,8 +37,8 @@ runs:
     - uses: dsaltares/fetch-gh-release-asset@1.1.1
       with:
         repo: 'XMPP-Interop-Testing/smack-sint-server-extensions'
-        version: 'tags/v1.0'
-        file: 'smack-sint-server-extensions-1.0-jar-with-dependencies.jar'
+        version: 'tags/v1.1'
+        file: 'smack-sint-server-extensions-1.1-jar-with-dependencies.jar'
 
     - run: |
         sudo echo "${{ inputs.ipAddress }} ${{ inputs.domain }}" | sudo tee -a /etc/hosts
@@ -47,6 +50,7 @@ runs:
           -Dsinttest.adminAccountPassword="${{ inputs.adminAccountPassword }}" \
           -Dsinttest.enabledConnections=tcp \
           -Dsinttest.dnsResolver=javax \
-          -Dsinttest.disabledTests="-Dsinttest.disabledTests=${{ inputs.disabledTests }}" \
-          -jar smack-sint-server-extensions-1.0-jar-with-dependencies.jar
+          -Dsinttest.disabledSpecifications="${{ inputs.disabledSpecifications }}" \
+          -Dsinttest.disabledTests="${{ inputs.disabledTests }}" \
+          -jar smack-sint-server-extensions-1.1-jar-with-dependencies.jar
       shell: bash
