@@ -1,0 +1,43 @@
+name: Openfire CI
+
+env:
+  CI: true
+  OPENFIRE_VERSION_DOTS: "4.8.1"
+  OPENFIRE_VERSION_DASHES: "4_8_1"
+
+on: [push, pull_request]
+
+
+jobs:
+  run-action:
+
+    name: Execute Github Action
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout actions (that are invoked in the 'startCIServer' and 'stopCIServer' steps) # Do this _before_ untarring the distribution, as the checkout will empty the directory prior to the checkout!
+        uses: actions/checkout@v4
+        with:
+          repository: igniterealtime/Openfire
+          ref: v$OPENFIRE_VERSION_DOTS
+          sparse-checkout: |
+            .github
+      - name: Download Openfire distribution
+        run: |
+          curl -L "https://github.com/igniterealtime/Openfire/releases/download/v$OPENFIRE_VERSION_DOTS/openfire_$OPENFIRE_VERSION_DASHES.tar.gz" -o distribution-artifact; fi
+      - name: untar distribution # sharing artifacts that consist of many files can be slow. Share one file instead.
+        run: tar -xf distribution-artifact.tar
+      - name: Start CI server from distribution
+        id: startCIServer
+        uses: ./.github/actions/startserver-action
+      - name: Run the action that's developed in this repository
+        uses: ./action
+        with:
+          domain: 'example.org'
+          adminAccountUsername: 'admin'
+          adminAccountPassword: 'admin'
+          disabledTests: 'EntityCapsTest,SoftwareInfoIntegrationTest,XmppConnectionIntegrationTest,StreamManagementTest,WaitForClosingStreamElementTest,IoTControlIntegrationTest,ModularXmppClientToServerConnectionLowLevelIntegrationTest'
+      - name: Stop CI server
+        if: ${{ always() && steps.startCIServer.conclusion == 'success' }} # TODO figure out if this is correct. The intent is to have the server stopped if it was successfully started, even if the tests fail. Failing tests should still cause the job to fail.
+        uses: ./.github/actions/stopserver-action
