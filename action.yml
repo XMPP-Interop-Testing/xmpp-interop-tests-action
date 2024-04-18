@@ -60,3 +60,9 @@ runs:
           -DlogDir="${{ inputs.logDir }}" \
           -jar smack-sint-server-extensions-1.1-jar-with-dependencies.jar
       shell: bash
+
+    - name: Upload XMPP debug logs as an artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: XMPP debug logs
+        path: '${{ inputs.logDir }}'
