@@ -62,6 +62,7 @@ runs:
       shell: bash
 
     - name: Upload XMPP debug logs as an artifact
+      if: always() # Especially when the tests fail, it's desirable to have access to these reports!
       uses: actions/upload-artifact@v4
       with:
         name: XMPP debug logs
