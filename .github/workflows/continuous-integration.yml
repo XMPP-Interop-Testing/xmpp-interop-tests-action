@@ -27,11 +27,18 @@ jobs:
           path: tools # different from the checkout done in the previous step (which is otherwise overwritten).
           sparse-checkout: |
             .github
-      - name: Download Openfire distribution
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: openfire.tar.gz
+          key: openfire-${{env.OPENFIRE_VERSION_DOTS}}
+      - name: Download Openfire
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          curl -L "https://github.com/igniterealtime/Openfire/releases/download/v${{ env.OPENFIRE_VERSION_DOTS }}/openfire_${{ env.OPENFIRE_VERSION_DASHES }}.tar.gz" -o distribution-artifact.tar.gz
-      - name: untar distribution # sharing artifacts that consist of many files can be slow. Share one file instead.
-        run: tar -xf distribution-artifact.tar.gz
+          curl -L https://github.com/igniterealtime/Openfire/releases/download/v${{ env.OPENFIRE_VERSION_DOTS }}/openfire_${{ env.OPENFIRE_VERSION_DASHES }}.tar.gz -o openfire.tar.gz
+      - name: Extract Openfire
+        run: |
+          tar -xzf openfire.tar.gz
       - name: Start CI server from distribution
         id: startCIServer
         uses: ./tools/.github/actions/startserver-action
