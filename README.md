@@ -1,6 +1,8 @@
 # xmpp-interop-tests-action
 A GitHub Action that performs XMPP interoperability tests on an XMPP domain.
 
+For more information, please visit our project website at https://xmpp-interop-testing.github.io/
+
 ## Test Account Provisioning
 The Action will typically execute various tests. Each test will use a fresh set of XMPP user accounts. These are
 automatically provisioned by the testing framework. They will be removed after the test execution.
