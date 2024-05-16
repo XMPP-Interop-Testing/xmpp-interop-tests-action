@@ -41,8 +41,8 @@ runs:
     - uses: dsaltares/fetch-gh-release-asset@1.1.1
       with:
         repo: 'XMPP-Interop-Testing/smack-sint-server-extensions'
-        version: 'tags/v1.1'
-        file: 'smack-sint-server-extensions-1.1-jar-with-dependencies.jar'
+        version: 'tags/v1.2'
+        file: 'smack-sint-server-extensions-1.2-jar-with-dependencies.jar'
 
     - run: |
         sudo echo "${{ inputs.ipAddress }} ${{ inputs.domain }}" | sudo tee -a /etc/hosts
@@ -56,9 +56,10 @@ runs:
           -Dsinttest.dnsResolver=javax \
           -Dsinttest.disabledSpecifications="${{ inputs.disabledSpecifications }}" \
           -Dsinttest.disabledTests="${{ inputs.disabledTests }}" \
+          -Dsinttest.testRunResultProcessors=org.igniterealtime.smack.inttest.SmackIntegrationTestFramework\$JulTestRunResultProcessor,org.igniterealtime.smack.inttest.util.JUnitXmlTestRunResultProcessor \
           -Dsinttest.debugger="org.igniterealtime.smack.inttest.util.FileLoggerFactory" \
           -DlogDir="${{ inputs.logDir }}" \
-          -jar smack-sint-server-extensions-1.1-jar-with-dependencies.jar
+          -jar smack-sint-server-extensions-1.2-jar-with-dependencies.jar
       shell: bash
 
     - name: Upload XMPP debug logs as an artifact
@@ -67,3 +68,12 @@ runs:
       with:
         name: XMPP debug logs
         path: '${{ inputs.logDir }}'
+
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v4
+      if: always() # always run even if the previous step fails
+      with:
+        report_paths: '${{ inputs.logDir }}/test-results.xml'
+        suite_regex: '*'
+        include_passed: true
+        detailed_summary: true
