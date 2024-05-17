@@ -77,3 +77,4 @@ runs:
         suite_regex: '*'
         include_passed: true
         detailed_summary: true
+        annotate_only: true
