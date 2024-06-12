@@ -1,12 +1,12 @@
 name: 'XMPP Interoperability Tests'
 description: 'Verifies functional behavior of an XMPP server by executing interoperability tests.'
 inputs:
-  ipAddress:
-    description: 'The IP address of the server under test'
+  host:
+    description: 'IP address or DNS name of the XMPP service to run the tests on.'
     required: true
     default: '127.0.0.1'
   domain:
-    description: 'XMPP domain name of server under test'
+    description: 'XMPP domain name of server under test.'
     required: true
     default: 'example.org'
   timeout:
@@ -45,9 +45,9 @@ runs:
         file: 'smack-sint-server-extensions-1.2-jar-with-dependencies.jar'
 
     - run: |
-        sudo echo "${{ inputs.ipAddress }} ${{ inputs.domain }}" | sudo tee -a /etc/hosts
         java \
           -Dsinttest.service="${{ inputs.domain }}" \
+          -Dsinttest.host="${{ inputs.host }}" \
           -Dsinttest.securityMode=disabled \
           -Dsinttest.replyTimeout=${{ inputs.timeout }} \
           -Dsinttest.adminAccountUsername="${{ inputs.adminAccountUsername }}" \
