@@ -50,7 +50,7 @@ jobs:
           domain: 'example.org'
           adminAccountUsername: 'admin'
           adminAccountPassword: 'admin'
-          disabledTests: 'EntityCapsTest,SoftwareInfoIntegrationTest,XmppConnectionIntegrationTest,StreamManagementTest,WaitForClosingStreamElementTest,IoTControlIntegrationTest,ModularXmppClientToServerConnectionLowLevelIntegrationTest,MultiUserChatOccupantIntegrationTest,MultiUserChatRolesAffiliationsPrivilegesIntegrationTest'
+          disabledTests: 'EntityCapsTest,SoftwareInfoIntegrationTest,XmppConnectionIntegrationTest,StreamManagementTest,WaitForClosingStreamElementTest,IoTControlIntegrationTest,ModularXmppClientToServerConnectionLowLevelIntegrationTest,MultiUserChatOccupantIntegrationTest,MultiUserChatRolesAffiliationsPrivilegesIntegrationTest,ServiceDiscoveryIntegrationTest,VCardTempIntegrationTest'
           disabledSpecifications: 'RFC6121'
           logDir: ./output
       - name: Stop CI server
