@@ -2,8 +2,8 @@ name: Openfire CI
 
 env:
   CI: true
-  OPENFIRE_VERSION_DOTS: "4.8.1"
-  OPENFIRE_VERSION_DASHES: "4_8_1"
+  OPENFIRE_VERSION_DOTS: "4.8.2"
+  OPENFIRE_VERSION_DASHES: "4_8_2"
 
 on: [push, pull_request]
 
@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: igniterealtime/Openfire
-          ref: main # After Openfire v4.8.2, Replace with something like v${{ env.OPENFIRE_VERSION_DOTS }}
+          ref: v${{ env.OPENFIRE_VERSION_DOTS }}
           path: tools # different from the checkout done in the previous step (which is otherwise overwritten).
           sparse-checkout: |
             .github
