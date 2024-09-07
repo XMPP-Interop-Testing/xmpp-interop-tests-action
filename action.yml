@@ -75,6 +75,6 @@ runs:
       with:
         report_paths: '${{ inputs.logDir }}/test-results.xml'
         suite_regex: '*'
-        include_passed: true
+        include_passed: false
         detailed_summary: true
         annotate_only: true
