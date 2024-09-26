@@ -28,7 +28,7 @@ The Action can be configured using the following inputs:
 
 ## Basic Configuration
 ```yaml
-uses: XMPP-Interop-Testing/xmpp-interop-tests-action@v1.3.4
+uses: XMPP-Interop-Testing/xmpp-interop-tests-action@v1.4.0
 with:
   domain: 'shakespeare.lit'
   adminAccountUsername: 'juliet'
@@ -59,7 +59,7 @@ This could look something like the flow below. Note that all but the third step 
   uses: ./.github/actions/startserver-action # Should result in a running server.
 
 - name: Run XMPP Interoperability Tests against CI server.
-  uses: XMPP-Interop-Testing/xmpp-interop-tests-action@v1.3.4
+  uses: XMPP-Interop-Testing/xmpp-interop-tests-action@v1.4.0
   with:
     domain: 'shakespeare.lit'
     adminAccountUsername: 'juliet'
