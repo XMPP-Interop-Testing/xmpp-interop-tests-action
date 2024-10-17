@@ -25,6 +25,12 @@ inputs:
   disabledTests:
     description: 'Comma-separated list of tests that are to be skipped (eg: "EntityCapsTest,SoftwareInfoIntegrationTest")'
     required: false
+  enabledSpecifications:
+    description: 'Comma-separated list of specifications for which tests are to be run (eg: "XEP-0045,XEP-0060")'
+    required: false
+  enabledTests:
+    description: 'Comma-separated list of tests that are to be run (eg: "EntityCapsTest,SoftwareInfoIntegrationTest")'
+    required: false
   logDir:
     description: 'The directory in which the test output and logs are to be stored. This directory will be created, if it does not already exist.'
     required: false
@@ -49,21 +55,40 @@ runs:
         file: 'smack-sint-server-extensions-1.4.0-jar-with-dependencies.jar'
 
     - run: |
-        java \
-          -Dsinttest.service="${{ inputs.domain }}" \
-          -Dsinttest.host="${{ inputs.host }}" \
-          -Dsinttest.securityMode=disabled \
-          -Dsinttest.replyTimeout=${{ inputs.timeout }} \
-          -Dsinttest.adminAccountUsername="${{ inputs.adminAccountUsername }}" \
-          -Dsinttest.adminAccountPassword="${{ inputs.adminAccountPassword }}" \
-          -Dsinttest.enabledConnections=tcp \
-          -Dsinttest.dnsResolver=javax \
-          -Dsinttest.disabledSpecifications="${{ inputs.disabledSpecifications }}" \
-          -Dsinttest.disabledTests="${{ inputs.disabledTests }}" \
-          -Dsinttest.testRunResultProcessors=org.igniterealtime.smack.inttest.util.StdOutTestRunResultProcessor,org.igniterealtime.smack.inttest.util.JUnitXmlTestRunResultProcessor \
-          -Dsinttest.debugger="org.igniterealtime.smack.inttest.util.FileLoggerFactory" \
-          -DlogDir="${{ inputs.logDir }}" \
-          -jar smack-sint-server-extensions-1.4.0-jar-with-dependencies.jar
+          JAVACMD=()
+          JAVACMD+=("java")
+          JAVACMD+=("-Dsinttest.service=${{ inputs.domain }}")
+          JAVACMD+=("-Dsinttest.host=${{ inputs.host }}")
+          JAVACMD+=("-Dsinttest.securityMode=disabled")
+          JAVACMD+=("-Dsinttest.replyTimeout=${{ inputs.timeout }}")
+
+          if [ "${{ inputs.adminAccountUsername }}" != "" ]; then
+            JAVACMD+=("-Dsinttest.adminAccountUsername=${{ inputs.adminAccountUsername }}")
+          fi
+          if [ "${{ inputs.adminAccountPassword }}" != "" ]; then
+            JAVACMD+=("-Dsinttest.adminAccountPassword=${{ inputs.adminAccountPassword }}")
+          fi
+          JAVACMD+=("-Dsinttest.enabledConnections=tcp")
+          JAVACMD+=("-Dsinttest.dnsResolver=javax")
+          if [ "${{ inputs.disabledSpecifications }}" != "" ]; then
+              JAVACMD+=("-Dsinttest.disabledSpecifications=${{ inputs.disabledSpecifications }}")
+          fi
+          if [ "${{ inputs.disabledTests }}" != "" ]; then
+              JAVACMD+=("-Dsinttest.disabledTests=${{ inputs.disabledTests }}")
+          fi
+          if [ "${{ inputs.enabledSpecifications }}" != "" ]; then
+              JAVACMD+=("-Dsinttest.enabledSpecifications=${{ inputs.enabledSpecifications }}")
+          fi
+          if [ "${{ inputs.enabledTests }}" != "" ]; then
+              JAVACMD+=("-Dsinttest.enabledTests=${{ inputs.enabledTests }}")
+          fi
+          JAVACMD+=("-Dsinttest.testRunResultProcessors=org.igniterealtime.smack.inttest.util.StdOutTestRunResultProcessor,org.igniterealtime.smack.inttest.util.JUnitXmlTestRunResultProcessor")
+          JAVACMD+=("-Dsinttest.debugger=org.igniterealtime.smack.inttest.util.FileLoggerFactory")
+          JAVACMD+=("-DlogDir={{ inputs.logDir }}")
+          JAVACMD+=("-jar")
+          JAVACMD+=("smack-sint-server-extensions-1.4.0-jar-with-dependencies.jar")
+
+          "${JAVACMD[@]}"
       shell: bash
 
     - name: Upload XMPP debug logs as an artifact
