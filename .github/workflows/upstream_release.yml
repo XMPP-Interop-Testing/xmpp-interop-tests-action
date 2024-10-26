@@ -3,6 +3,12 @@ name: Trigger Release from Upstream
 on:
   repository_dispatch:
     types: [trigger-workflow]
+  workflow_dispatch:
+    inputs:
+        version:
+          description: 'The version to trigger, e.g. v1.2.3'
+          default: 'v9.9.9'
+          required: true
 
 permissions:
   contents: write
@@ -19,7 +25,12 @@ jobs:
       - name: Set version parameters
         id: version
         run: |
-            VERSION=${{ github.event.client_payload.version }}
+            if [ ${{ github.event_name }} == 'workflow_dispatch' ]; then
+                VERSION=${{ github.event.inputs.version }}"
+            else
+                VERSION=${{ github.event.client_payload.version }}
+            fi
+            
             FILE_VERSION=${VERSION:1} # Strip leading 'v'
             echo "Version: $VERSION"
             echo "File version: $FILE_VERSION"
