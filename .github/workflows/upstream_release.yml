@@ -40,8 +40,6 @@ jobs:
 
       - name: Replace the version in the action.yml file
         run: |
-            VERSION=${{ github.event.client_payload.version }}
-            FILE_VERSION=${VERSION:1} # Strip leading 'v'
             sed -i "s#version: 'tags/.*'#version: 'tags/${{ steps.version.outputs.version }}'#" action.yml
             sed -i "s/smack-sint-server-extensions-.*-jar-with-dependencies.jar/smack-sint-server-extensions-${{ steps.version.outputs.file_version }}-jar-with-dependencies.jar/g" action.yml
         shell: bash
