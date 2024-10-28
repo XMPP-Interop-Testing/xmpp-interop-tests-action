@@ -26,12 +26,12 @@ jobs:
         id: version
         run: |
             if [ ${{ github.event_name }} == 'workflow_dispatch' ]; then
-                VERSION=${{ github.event.inputs.version }}"
+                VERSION="${{ github.event.inputs.version }}"
             else
-                VERSION=${{ github.event.client_payload.version }}
+                VERSION="${{ github.event.client_payload.version }}"
             fi
             
-            FILE_VERSION=${VERSION:1} # Strip leading 'v'
+            FILE_VERSION="${VERSION:1}" # Strip leading 'v'
             echo "Version: $VERSION"
             echo "File version: $FILE_VERSION"
             echo "version=$VERSION" >> $GITHUB_OUTPUT
