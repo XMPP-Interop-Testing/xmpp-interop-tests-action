@@ -47,6 +47,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7.0.5
         with:
+            draft: always-true # https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#workarounds-to-trigger-further-workflow-runs
             commit-message: "Update sint-server-extensions version to ${{ steps.version.outputs.version }}"
             branch: "update-sintse-version-${{ steps.version.outputs.file_version }}"
             title: "Update sint-server-extensions version to ${{ steps.version.outputs.version }}"
