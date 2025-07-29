@@ -2,9 +2,9 @@ name: Openfire CI
 
 env:
   CI: true
-  OPENFIRE_VERSION: "4.9.0"
+  OPENFIRE_VERSION: "5.0.1"
 
-on: 
+on:
   push:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
@@ -19,12 +19,12 @@ jobs:
     steps:
       - name: Checkout local action
         uses: actions/checkout@v4
-      
+
       - name: Run Openfire
-        uses: igniterealtime/launch-openfire-action@v1.1.2
+        uses: igniterealtime/launch-openfire-action@v1.2.0
         with:
           version: ${{env.OPENFIRE_VERSION}}
-      
+
       - name: Run the action that's developed in this repository
         uses: ./
         with:
