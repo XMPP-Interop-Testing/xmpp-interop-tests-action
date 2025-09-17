@@ -1,6 +1,10 @@
 name: 'XMPP Interoperability Tests'
 description: 'Verifies functional behavior of an XMPP server by executing interoperability tests.'
 inputs:
+  testId:
+    description: 'An optional identifier that will be used in the naming of artifacts.'
+    required: false
+    default: 'default'
   host:
     description: 'IP address or DNS name of the XMPP service to run the tests on.'
     required: true
@@ -131,7 +135,7 @@ runs:
       if: always() # Especially when the tests fail, it's desirable to have access to these reports!
       uses: actions/upload-artifact@v4
       with:
-        name: XMPP debug logs
+        name: XMPP debug logs (for test ID '${{ inputs.testId }}')
         path: '${{ inputs.logDir }}'
 
     - name: Publish Test Report

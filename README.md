@@ -32,7 +32,8 @@ The Action can be configured using the following inputs:
 - `disabledSpecifications`: _(optional)_ A comma-separated list of specifications (not case-sensitive) that are to be skipped. For example: `XEP-0045,XEP-0060`
 - `enabledTests`: _(optional)_ A comma-separated list of tests that are the only ones to be run. For example: `EntityCapsTest,SoftwareInfoIntegrationTest`
 - `enabledSpecifications`: _(optional)_ A comma-separated list of specifications (not case-sensitive) that are the only ones to be run. For example: `XEP-0045,XEP-0060`
-- `logDir`: _(optional)_ The directory in which the test output and logs are to be stored. This directory will be created, if it does not already exist. Default value: `./output`
+- `logDir`: _(optional)_: The directory in which the test output and logs are to be stored. This directory will be created, if it does not already exist. Default value: `./output`
+- `testId`: _(optional)_: Used to differentiate generated artifacts. Only useful when using this Action more than once in the same workflow. Default value: `default`
 
 ### Provisioning Test Accounts
 
