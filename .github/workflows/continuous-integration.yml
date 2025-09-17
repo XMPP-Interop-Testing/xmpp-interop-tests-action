@@ -11,9 +11,9 @@ on:
 
 
 jobs:
-  run-action:
+  run-action-admin:
 
-    name: Execute Github Action
+    name: Execute (using XEP-0133 Service Administration)
     runs-on: ubuntu-latest
 
     steps:
@@ -28,8 +28,56 @@ jobs:
       - name: Run the action that's developed in this repository
         uses: ./
         with:
+          testId: 'provisioning-admin'
           domain: 'example.org'
           adminAccountUsername: 'admin'
           adminAccountPassword: 'admin'
           enabledSpecifications: 'XEP-0115,XEP-0199,XEP-0352'
-          logDir: ./output
+
+  run-action-accounts:
+
+    name: Execute (using explicit test accounts)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout local action
+        uses: actions/checkout@v4
+
+      - name: Run Openfire
+        uses: igniterealtime/launch-openfire-action@v1.2.0
+        with:
+          version: ${{env.OPENFIRE_VERSION}}
+
+      - name: Run the action that's developed in this repository
+        uses: ./
+        with:
+          testId: 'provisioning-static-accounts'
+          domain: 'example.org'
+          accountOneUsername: 'jane'
+          accountOnePassword: 'secret'
+          accountTwoUsername: 'juan'
+          accountTwoPassword: 'secret'
+          accountThreeUsername: 'john'
+          accountThreePassword: 'secret'
+          enabledSpecifications: 'XEP-0115,XEP-0199,XEP-0352'
+
+  run-action-ibr:
+
+    name: Execute (using XEP-0077 In-Band Registration)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout local action
+        uses: actions/checkout@v4
+
+      - name: Run Openfire
+        uses: igniterealtime/launch-openfire-action@v1.2.0
+        with:
+          version: ${{env.OPENFIRE_VERSION}}
+
+      - name: Run the action that's developed in this repository
+        uses: ./
+        with:
+          testId: 'provisioning-ibr'
+          domain: 'example.org'
+          enabledSpecifications: 'XEP-0115,XEP-0199,XEP-0352'
