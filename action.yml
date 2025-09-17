@@ -14,10 +14,28 @@ inputs:
     required: false
     default: '5000'
   adminAccountUsername:
-    description: 'Account name of a pre-existing user that is allowed to create other users, per XEP-0133. If not provided, In-band registration (XEP-0077) will be used.'
+    description: 'Account name of a pre-existing user that is allowed to create other users, per XEP-0133.'
     required: false
   adminAccountPassword:
     description: 'Password for the admin account.'
+    required: false
+  accountOneUsername:
+    description: 'The first account name of a set of three accounts used for testing.'
+    required: false
+  accountOnePassword:
+    description: 'The password of the accountOneUsername account'
+    required: false
+  accountTwoUsername:
+    description: 'The second account name of a set of three accounts used for testing.'
+    required: false
+  accountTwoPassword:
+    description: 'The password of the accountTwoUsername account'
+    required: false
+  accountThreeUsername:
+    description: 'The third account name of a set of three accounts used for testing.'
+    required: false
+  accountThreePassword:
+    description: 'The password of the accountThreeUsername account'
     required: false
   disabledSpecifications:
     description: 'Comma-separated list of specifications for which tests are to be skipped (eg: "XEP-0045,XEP-0060")'
@@ -67,6 +85,24 @@ runs:
           fi
           if [ "${{ inputs.adminAccountPassword }}" != "" ]; then
             JAVACMD+=("-Dsinttest.adminAccountPassword=${{ inputs.adminAccountPassword }}")
+          fi
+          if [ "${{ inputs.accountOneUsername }}" != "" ]; then
+            JAVACMD+=("-Dsinttest.accountOneUsername=${{ inputs.accountOneUsername }}")
+          fi
+          if [ "${{ inputs.accountOnePassword }}" != "" ]; then
+            JAVACMD+=("-Dsinttest.accountOnePassword=${{ inputs.accountOnePassword }}")
+          fi
+          if [ "${{ inputs.accountTwoUsername }}" != "" ]; then
+            JAVACMD+=("-Dsinttest.accountTwoUsername=${{ inputs.accountTwoUsername }}")
+          fi
+          if [ "${{ inputs.accountTwoPassword }}" != "" ]; then
+            JAVACMD+=("-Dsinttest.accountTwoPassword=${{ inputs.accountTwoPassword }}")
+          fi
+          if [ "${{ inputs.accountThreeUsername }}" != "" ]; then
+            JAVACMD+=("-Dsinttest.accountThreeUsername=${{ inputs.accountThreeUsername }}")
+          fi
+          if [ "${{ inputs.accountThreePassword }}" != "" ]; then
+            JAVACMD+=("-Dsinttest.accountThreePassword=${{ inputs.accountThreePassword }}")
           fi
           JAVACMD+=("-Dsinttest.enabledConnections=tcp")
           JAVACMD+=("-Dsinttest.dnsResolver=javax")
