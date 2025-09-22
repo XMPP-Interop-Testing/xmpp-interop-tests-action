@@ -44,7 +44,7 @@ To be able to run the tests, the server that is being tested needs to be provisi
 
 ## Basic Configuration
 ```yaml
-uses: XMPP-Interop-Testing/xmpp-interop-tests-action@v1.6.1
+uses: XMPP-Interop-Testing/xmpp-interop-tests-action@v1.7.0
 with:
   domain: 'shakespeare.lit'
   adminAccountUsername: 'juliet'
@@ -75,7 +75,7 @@ This could look something like the flow below. Note that all but the third step 
   uses: ./.github/actions/startserver-action # Should result in a running server.
 
 - name: Run XMPP Interoperability Tests against CI server.
-  uses: XMPP-Interop-Testing/xmpp-interop-tests-action@v1.6.1
+  uses: XMPP-Interop-Testing/xmpp-interop-tests-action@v1.7.0
   with:
     domain: 'shakespeare.lit'
     adminAccountUsername: 'juliet'
