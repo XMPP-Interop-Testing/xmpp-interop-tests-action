@@ -53,6 +53,10 @@ inputs:
   enabledTests:
     description: 'Comma-separated list of tests that are to be run (eg: "EntityCapsTest,SoftwareInfoIntegrationTest")'
     required: false
+  failOnImpossibleTest:
+    description: 'If set to "true", fails the test run if any configured tests were impossible to execute.'
+    required: false
+    default: "false"
   logDir:
     description: 'The directory in which the test output and logs are to be stored. This directory will be created, if it does not already exist.'
     required: false
@@ -121,6 +125,9 @@ runs:
           fi
           if [ "${{ inputs.enabledTests }}" != "" ]; then
               JAVACMD+=("-Dsinttest.enabledTests=${{ inputs.enabledTests }}")
+          fi
+          if [ "${{ inputs.failOnImpossibleTest }}" != "" ]; then
+              JAVACMD+=("-Dsinttest.failOnImpossibleTest=${{ inputs.failOnImpossibleTest }}")
           fi
           JAVACMD+=("-Dsinttest.testRunResultProcessors=org.igniterealtime.smack.inttest.util.StdOutTestRunResultProcessor,org.igniterealtime.smack.inttest.util.JUnitXmlTestRunResultProcessor")
           JAVACMD+=("-Dsinttest.debugger=org.igniterealtime.smack.inttest.util.ModifiedStandardSinttestDebuggerMetaFactory")
