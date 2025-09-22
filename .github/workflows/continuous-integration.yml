@@ -97,6 +97,7 @@ jobs:
           version: ${{env.OPENFIRE_VERSION}}
 
       - name: Run the action that's developed in this repository
+        id: testExecution
         continue-on-error: true
         uses: ./
         with:
@@ -108,7 +109,8 @@ jobs:
           failOnImpossibleTest: 'true'
 
       - name: Assert that the action failed as expected
-        if: ${{ success() }}
+        # Using continue-on-error: true results in `conclusion` being a success, while `outcome` can differ. `if: failure()` looks at `conclusion`
+        if: ${{ steps.testExecution.outcome != 'failure' }}
         run: |
           echo "❌ Action execution succeeded, but failure was expected!"
           exit 1
