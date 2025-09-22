@@ -81,3 +81,35 @@ jobs:
           testId: 'provisioning-ibr'
           domain: 'example.org'
           enabledSpecifications: 'XEP-0115,XEP-0199,XEP-0352'
+
+  run-action-fail-on-impossible-test:
+
+    name: Test the 'fail-on-impossible-test' configuration option
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout local action
+        uses: actions/checkout@v4
+
+      - name: Run Openfire
+        uses: igniterealtime/launch-openfire-action@v1.2.0
+        with:
+          version: ${{env.OPENFIRE_VERSION}}
+
+      - name: Run the action that's developed in this repository
+        continue-on-error: true
+        uses: ./
+        with:
+          testId: 'fail-on-impossible-test'
+          domain: 'example.org'
+          adminAccountUsername: 'admin'
+          adminAccountPassword: 'admin'
+          enabledSpecifications: 'XEP-0215,XEP-0199'
+          failOnImpossibleTest: 'true'
+
+      - name: Assert that the action failed as expected
+        if: ${{ success() }}
+        run: |
+          echo "❌ Action execution succeeded, but failure was expected!"
+          exit 1
+        shell: bash
