@@ -77,8 +77,8 @@ runs:
     - uses: dsaltares/fetch-gh-release-asset@1.1.2
       with:
         repo: 'XMPP-Interop-Testing/smack-sint-server-extensions'
-        version: 'tags/v1.7.0'
-        file: 'smack-sint-server-extensions-1.7.0-jar-with-dependencies.jar'
+        version: 'tags/v9.9.9'
+        file: 'smack-sint-server-extensions-9.9.9-jar-with-dependencies.jar'
 
     - run: |
           JAVACMD=()
@@ -133,7 +133,7 @@ runs:
           JAVACMD+=("-Dsinttest.debugger=org.igniterealtime.smack.inttest.util.ModifiedStandardSinttestDebuggerMetaFactory")
           JAVACMD+=("-DlogDir=${{ inputs.logDir }}")
           JAVACMD+=("-jar")
-          JAVACMD+=("smack-sint-server-extensions-1.7.0-jar-with-dependencies.jar")
+          JAVACMD+=("smack-sint-server-extensions-9.9.9-jar-with-dependencies.jar")
 
           "${JAVACMD[@]}"
       shell: bash
