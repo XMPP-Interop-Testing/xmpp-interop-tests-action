@@ -57,6 +57,9 @@ inputs:
     description: 'If set to "true", fails the test run if any configured tests were impossible to execute.'
     required: false
     default: "false"
+  extensionJar:
+    description: 'A single JAR file to load custom test extensions or additional test logic. Only one JAR may be specified.'
+    required: false
   logDir:
     description: 'The directory in which the test output and logs are to be stored. This directory will be created, if it does not already exist.'
     required: false
@@ -80,6 +83,31 @@ runs:
         version: 'tags/v1.7.2'
         file: 'smack-sint-server-extensions-1.7.2-jar-with-dependencies.jar'
 
+    # When there is an additional jar file for the classpath, merge them into the main jar. I've tried to instead add 
+    # the additional data to the classpath, but that didn't work (although I still believe that that would be the right
+    # approach).
+    - name: Optionally merge extensionJar into test JAR
+      if: ${{ inputs.extensionJar != '' }}
+      run: |
+        set -euo pipefail
+        
+        EXT_JAR="${{ inputs.extensionJar }}"
+        TARGET_JAR="smack-sint-server-extensions-1.7.2-jar-with-dependencies.jar"
+        
+        mkdir -p tmp_extended
+        pushd tmp_extended > /dev/null
+        
+        jar xf "../$EXT_JAR"
+        rm -f META-INF/MANIFEST.MF
+        
+        popd > /dev/null
+        
+        jar uf "$TARGET_JAR" -C tmp_extended .
+        
+        # Remove signature files
+        zip -d "$TARGET_JAR" "META-INF/*.SF" "META-INF/*.RSA" "META-INF/*.DSA" || true
+      shell: bash
+  
     - run: |
           JAVACMD=()
           JAVACMD+=("java")
@@ -87,6 +115,7 @@ runs:
           JAVACMD+=("-Dsinttest.host=${{ inputs.host }}")
           JAVACMD+=("-Dsinttest.securityMode=disabled")
           JAVACMD+=("-Dsinttest.replyTimeout=${{ inputs.timeout }}")
+          JAVACMD+=("-Dsinttest.testPackages=com,org,net")
 
           if [ "${{ inputs.adminAccountUsername }}" != "" ]; then
             JAVACMD+=("-Dsinttest.adminAccountUsername=${{ inputs.adminAccountUsername }}")
@@ -135,6 +164,7 @@ runs:
           JAVACMD+=("-jar")
           JAVACMD+=("smack-sint-server-extensions-1.7.2-jar-with-dependencies.jar")
 
+          echo "Running ${JAVACMD[@]}"
           "${JAVACMD[@]}"
       shell: bash
 
@@ -145,6 +175,13 @@ runs:
         name: XMPP debug logs (for test ID '${{ inputs.testId }}')
         path: '${{ inputs.logDir }}'
 
+    - name: Upload constructed test jar
+      if: always() # Especially when the tests fail, it's desirable to have access to these reports!
+      uses: actions/upload-artifact@v4
+      with:
+        name: Test jar (for test ID '${{ inputs.testId }}')
+        path: 'smack-sint-server-extensions-1.7.2-jar-with-dependencies.jar'
+  
     - name: Publish Test Report
       uses: mikepenz/action-junit-report@v4
       if: always() # always run even if the previous step fails
