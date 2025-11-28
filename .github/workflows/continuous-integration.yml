@@ -137,3 +137,37 @@ jobs:
           domain: 'example.org'
           extensionJar: '.github/workflow-resources/extended.jar'
           enabledTests: 'ExtendedClasspathTest'
+
+  run-action-java-version:
+
+    name: Test the 'javaVersion' configuration option
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout local action
+        uses: actions/checkout@v4
+
+      - name: Run Openfire
+        uses: igniterealtime/launch-openfire-action@v1.2.0
+        with:
+          version: ${{env.OPENFIRE_VERSION}}
+
+      - name: Run the action that's developed in this repository
+        id: testExecution
+        continue-on-error: true
+        uses: ./
+        with:
+          testId: 'modified-java-version'
+          domain: 'example.org'
+          adminAccountUsername: 'admin'
+          adminAccountPassword: 'admin'
+          enabledSpecifications: 'XEP-0115,XEP-0199,XEP-0352'
+          javaVersion: '9' # This is lower than the required minimum version of 11, which should cause the action to fail.
+
+      - name: Assert that the action failed as expected
+        # Using continue-on-error: true results in `conclusion` being a success, while `outcome` can differ. `if: failure()` looks at `conclusion`
+        if: ${{ steps.testExecution.outcome != 'failure' }}
+        run: |
+          echo "❌ Action execution succeeded, but failure was expected!"
+          exit 1
+        shell: bash
