@@ -23,6 +23,7 @@ The Action can be configured using the following inputs:
 - `logDir`: _(optional)_: The directory in which the test output and logs are to be stored. This directory will be created, if it does not already exist. Default value: `./output`
 - `failOnImpossibleTest`: _(optional)_ If set to 'true', fails the test run if any configured tests were impossible to execute. Default value: `false`
 - `extensionJar`: _(optional)_ A single JAR file to load custom test extensions or additional test logic. Only one JAR may be specified.
+- `javaVersion`: _(optional)_: The Java version to use for running the tests (useful when extensionJar is compiled against a newer Java version than the default). Default value: `11`
 - `testId`: _(optional)_: Used to differentiate generated artifacts. Only useful when using this Action more than once in the same workflow. Default value: `default`
 
 ### Provisioning Test Accounts
