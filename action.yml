@@ -115,7 +115,7 @@ runs:
           JAVACMD+=("-Dsinttest.host=${{ inputs.host }}")
           JAVACMD+=("-Dsinttest.securityMode=disabled")
           JAVACMD+=("-Dsinttest.replyTimeout=${{ inputs.timeout }}")
-          JAVACMD+=("-Dsinttest.testPackages=com,org,net")
+          JAVACMD+=("-Dsinttest.testPackages=com,org,net,biz,info,dev,io,uk,ch,fr,de,dk,in")
 
           if [ "${{ inputs.adminAccountUsername }}" != "" ]; then
             JAVACMD+=("-Dsinttest.adminAccountUsername=${{ inputs.adminAccountUsername }}")
