@@ -22,6 +22,8 @@ The Action can be configured using the following inputs:
 - `enabledSpecifications`: _(optional)_ A comma-separated list of specifications (not case-sensitive) that are the only ones to be run. For example: `XEP-0045,XEP-0060`
 - `logDir`: _(optional)_: The directory in which the test output and logs are to be stored. This directory will be created, if it does not already exist. Default value: `./output`
 - `failOnImpossibleTest`: _(optional)_ If set to 'true', fails the test run if any configured tests were impossible to execute. Default value: `false`
+- `securityMode`: _(optional)_ The XMPP connection security (TLS) mode to use: `disabled`, `ifpossible` or `required`. Tests that depend on an encrypted connection (eg: those exercising SASL2/Bind 2) are not possible to execute while this is `disabled`. Default value: `disabled`
+- `acceptAllCertificates`: _(optional)_ If set to `true`, the (self-signed) TLS certificate presented by the server under test is accepted without validation. Typically needed when `securityMode` is `ifpossible` or `required` and the server does not have a certificate signed by a publicly trusted CA. Default value: `false`
 - `extensionJar`: _(optional)_ A single JAR file to load custom test extensions or additional test logic. Only one JAR may be specified.
 - `javaVersion`: _(optional)_: The Java version to use for running the tests (useful when extensionJar is compiled against a newer Java version than the default). Default value: `11`
 - `testId`: _(optional)_: Used to differentiate generated artifacts. Only useful when using this Action more than once in the same workflow. Default value: `default`

@@ -57,6 +57,14 @@ inputs:
     description: 'If set to "true", fails the test run if any configured tests were impossible to execute.'
     required: false
     default: "false"
+  securityMode:
+    description: 'The XMPP connection security (TLS) mode to use: "disabled", "ifpossible" or "required". Tests that depend on an encrypted connection (eg: those exercising SASL2/Bind 2) are not possible to execute while this is "disabled".'
+    required: false
+    default: "disabled"
+  acceptAllCertificates:
+    description: 'If set to "true", the (self-signed) TLS certificate presented by the server under test is accepted without validation. Typically needed when securityMode is "ifpossible" or "required" and the server does not have a certificate signed by a publicly trusted CA.'
+    required: false
+    default: "false"
   extensionJar:
     description: 'A single JAR file to load custom test extensions or additional test logic. Only one JAR may be specified.'
     required: false
@@ -117,7 +125,10 @@ runs:
           JAVACMD+=("java")
           JAVACMD+=("-Dsinttest.service=${{ inputs.domain }}")
           JAVACMD+=("-Dsinttest.host=${{ inputs.host }}")
-          JAVACMD+=("-Dsinttest.securityMode=disabled")
+          JAVACMD+=("-Dsinttest.securityMode=${{ inputs.securityMode }}")
+          if [ "${{ inputs.acceptAllCertificates }}" == "true" ]; then
+            JAVACMD+=("-Dsinttest.acceptAllCertificates=true")
+          fi
           JAVACMD+=("-Dsinttest.replyTimeout=${{ inputs.timeout }}")
           JAVACMD+=("-Dsinttest.testPackages=com,org,net,biz,info,dev,io,uk,ch,fr,de,dk,in")
 
